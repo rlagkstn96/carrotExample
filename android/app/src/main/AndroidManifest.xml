@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.carrotexample">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
         android:label="carrotexample"
         android:name="${applicationName}"
