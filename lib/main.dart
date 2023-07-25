@@ -14,14 +14,18 @@ import 'package:provider/provider.dart';
 final _routerDelegate = BeamerDelegate(
     guards: [
       BeamGuard(
-          pathBlueprints: ['/'],
+          pathBlueprints: [
+            ...HomeLocation().pathBlueprints,
+            ...InputLocation().pathBlueprints,
+            ...ItemLocation().pathBlueprints
+          ],
           check: (context, location) {
             return context.watch<UserNotifier>().user != null;
           },
           showPage: BeamPage(child: StartScreen()))
     ],
     locationBuilder: BeamerLocationBuilder(
-        beamLocations: [HomeLocation(), InputLocation()]));
+        beamLocations: [HomeLocation(), InputLocation(), ItemLocation()]));
 
 void main() {
   Provider.debugCheckInvalidValueType = null;

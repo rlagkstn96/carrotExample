@@ -52,6 +52,9 @@ class ItemModel {
   ItemModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot)
       : this.fromJson(snapshot.data()!, snapshot.id, snapshot.reference);
 
+  ItemModel.fromQuerySnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
+      : this.fromJson(snapshot.data(), snapshot.id, snapshot.reference);
+
   Map<String, dynamic> toJson() { //모든 데이터 추출 및 모델로 만들어서 저장소에 보낼때 사용
     final map = <String, dynamic>{};
     map['userKey'] = userKey;

@@ -5,6 +5,7 @@ import 'package:carrotexample/constants/common_size.dart';
 import 'package:carrotexample/data/item_model.dart';
 import 'package:carrotexample/repo/image_storage.dart';
 import 'package:carrotexample/repo/item_service.dart';
+import 'package:carrotexample/router/locations.dart';
 import 'package:carrotexample/screens/input/milti_image_select.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -156,7 +157,7 @@ class _InputScreenState extends State<InputScreen> {
                     context.watch<CategoryNotifier>().currentCategoryInKor),
                 trailing: Icon(Icons.navigate_next),
                 onTap: () {
-                  context.beamToNamed('/input/category_input');
+                  context.beamToNamed('/$LOCATION_INPUT/$LOCATION_CATEGORY_INPUT');
                 },
               ),
               _divider,

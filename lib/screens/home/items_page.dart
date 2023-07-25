@@ -1,9 +1,15 @@
+import 'package:beamer/beamer.dart';
 import 'package:carrotexample/constants/common_size.dart';
 import 'package:carrotexample/repo/user_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../data/item_model.dart';
+import '../../repo/item_service.dart';
+import '../../router/locations.dart';
+import '../../utils/logger.dart';
 
 class ItemsPage extends StatelessWidget {
   const ItemsPage({Key? key}) : super(key: key);
@@ -15,20 +21,20 @@ class ItemsPage extends StatelessWidget {
         Size size = MediaQuery.of(context).size;
         final imgSize = size.width / 4;
 
-        return FutureBuilder(
-            future: Future.delayed(Duration(seconds: 2)),
+        return FutureBuilder<List<ItemModel>>(
+            future: ItemService().getItems(),
             builder: (context, snapshot) {
               return AnimatedSwitcher(
                   duration: Duration(milliseconds: 300),
-                  child: (snapshot.connectionState != ConnectionState.done)
-                      ? _shimmerListView(imgSize)
-                      : _listView(imgSize));
+                  child: (snapshot.hasData && snapshot.data!.isNotEmpty)
+                      ? _listView(imgSize, snapshot.data!)
+                      : _shimmerListView(imgSize));
             });
       },
     );
   }
 
-  ListView _listView(double imgSize) {
+  ListView _listView(double imgSize, List<ItemModel> items) {
     return ListView.separated(
       separatorBuilder: (context, index) {
         return Divider(
@@ -39,11 +45,13 @@ class ItemsPage extends StatelessWidget {
           endIndent: common_padding,
         );
       },
-      itemCount: 10,
+      itemCount: items.length,
       itemBuilder: (context, index) {
+        ItemModel item = items[index];
         return InkWell(
-          onTap: (){
-            UserService().firestoreReadTest();
+          onTap: () {
+            logger.d('ItemID : ${items[index].price}');
+            //context.beamToNamed('/$LOCATION_ITEM/:${item.itemKey}');
           },
           child: SizedBox(
             height: imgSize,
@@ -52,7 +60,9 @@ class ItemsPage extends StatelessWidget {
                 SizedBox(
                     height: imgSize,
                     width: imgSize,
-                    child: ExtendedImage.network('https://picsum.photos/100',
+                    child: ExtendedImage.network(
+                        item.imageDownloadUrls[0],
+                        fit: BoxFit.cover,
                         borderRadius: BorderRadius.circular(12),
                         shape: BoxShape.rectangle)),
                 SizedBox(width: common_small_padding),
@@ -61,14 +71,14 @@ class ItemsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'work',
+                      item.title,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                     Text(
                       '53일전',
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    Text('5000원'),
+                    Text('${item.price.toString()}원'),
                     Expanded(
                       child: Container(),
                     ),
